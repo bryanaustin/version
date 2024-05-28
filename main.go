@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// Process will run the application
+// Process will run the version application as intended
 func Process(c *Config) {
 	r, ok := ProcessConditional(c)
 	if ok {
@@ -36,7 +36,7 @@ func ProcessConditional(c *Config) (result bool, ok bool) {
 	return
 }
 
-// ProcessVerisonString will run though all the steps for a provided version
+// ProcessVerisonString will run though all the intended steps to generate the configured string result
 func ProcessVersionString(c *Config) string {
 	v := ProcessVersion(c)
 	if c.Format != nil {
@@ -51,72 +51,87 @@ func ProcessVersionString(c *Config) string {
 	return v.String(padding)
 }
 
-// ProcessVersion will run all the steps the result in a newer version
+// ProcessVersion will run all the steps the intended steps to generate the configured version
 func ProcessVersion(c *Config) *Version {
 	result := new(Version)
 	result.Numbers = append([]int(nil), c.Provided.Numbers...)
 	result.Separators = append([]string(nil), c.Provided.Separators...)
 	result.NumberFirst = c.Provided.NumberFirst
 
-	ProcessStepBase(c, result)
-	ProcessStepIncrement(c, result)
-	ProcessStepSet(c, result)
-	ProcessStepMinimum(c, result)
+	if c.Base != nil {
+		result = ProcessStepBase(*result, *c.Base)
+	}
+
+	if c.Increment != nil {
+		result = ProcessStepIncrement(*result, *c.Increment)
+	}
+
+	if c.Set != nil {
+		result = ProcessStepSet(*result, *c.Set)
+	}
+
+	if c.Minimum != nil {
+		result = ProcessStepMinimum(*result, *c.Minimum)
+	}
 
 	return result
 }
 
 // ProcessStepBase increase the largest verison number that's smaller then base version.
-func ProcessStepBase(c *Config, v *Version) {
-	if c.Base != nil {
-		// check to see if anything has changed between the versions
-		equal := true
-		for i := range c.Base.Numbers {
-			if v.Numbers[i] != c.Base.Numbers[i] {
-				equal = false
-				v.Numbers[i] = c.Base.Numbers[i]
-			}
-		}
-
-		if equal {
-			// increment
-			v.AddAndResetSmaller(len(c.Base.Numbers), 1)
-		} else {
-			// reset
-			v.ResetSmaller(len(c.Base.Numbers))
+func ProcessStepBase(v, x Version) *Version {
+	vCopy := v.Copy()
+	r := &vCopy
+	// check to see if anything has changed between the versions
+	equal := true
+	for i := range x.Numbers {
+		if r.Numbers[i] != x.Numbers[i] {
+			equal = false
+			r.Numbers[i] = x.Numbers[i]
 		}
 	}
+
+	if equal {
+		// increment
+		r.AddAndResetSmaller(len(x.Numbers), 1)
+	} else {
+		// reset
+		r.ResetSmaller(len(x.Numbers))
+	}
+	return r
 }
 
-func ProcessStepIncrement(c *Config, v *Version) {
-	if c.Increment != nil {
-		for i, x := range c.Increment.Numbers {
-			if x > 0 {
-				v.AddAndResetSmaller(i, x)
-			}
+func ProcessStepIncrement(v, x Version) *Version {
+	vCopy := v.Copy()
+	r := &vCopy
+	for i, val := range x.Numbers {
+		if val > 0 {
+			r.AddAndResetSmaller(i, val)
 		}
 	}
+	return r
 }
 
-func ProcessStepSet(c *Config, v *Version) {
-	if c.Set != nil {
-		for i, x := range c.Set.Numbers {
-			if x > 0 {
-				v.SetAndResetSmaller(i, x)
-			}
+func ProcessStepSet(v, x Version) *Version {
+	vCopy := v.Copy()
+	r := &vCopy
+	for i, val := range x.Numbers {
+		if val > 0 {
+			r.SetAndResetSmaller(i, val)
 		}
 	}
+	return r
 }
 
-func ProcessStepMinimum(c *Config, v *Version) {
-	if c.Minimum != nil {
-		for i, x := range c.Minimum.Numbers {
-			if len(v.Numbers) < i {
-				break
-			}
-			if x > v.Numbers[i] {
-				v.Numbers[i] = x
-			}
+func ProcessStepMinimum(v, x Version) *Version {
+	vCopy := v.Copy()
+	r := &vCopy
+	for i, val := range x.Numbers {
+		if len(r.Numbers) < i {
+			break
+		}
+		if val > r.Numbers[i] {
+			r.Numbers[i] = val
 		}
 	}
+	return r
 }

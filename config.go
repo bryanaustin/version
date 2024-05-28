@@ -58,55 +58,6 @@ func ConfigureFromArgs() *Config {
 	return c
 }
 
-// LessThan will return true if v is lesser than x
-func (v Version) LessThan(x Version) bool {
-	vn, xn := normalizeNumbers(v.Numbers, x.Numbers)
-
-	for i := range vn {
-		if vn[i] < xn[i] {
-			return true
-		}
-		if vn[i] > xn[i] {
-			return false
-		}
-	}
-	// will reach here if exact match
-	return false
-}
-
-// GreatThan will return true if v is greater than x
-func (v Version) GreatThan(x Version) bool {
-	vn, xn := normalizeNumbers(v.Numbers, x.Numbers)
-
-	for i := range vn {
-		if vn[i] > xn[i] {
-			return true
-		}
-		if vn[i] < xn[i] {
-			return false
-		}
-	}
-	// will reach here if exact match
-	return false
-}
-
-func normalizeNumbers(x, y []int) (nx, ny []int) {
-	longest := max(len(x), len(y))
-
-	if len(x) < longest {
-		nu := make([]int, longest)
-		copy(nu, x)
-		nx = nu
-	}
-
-	if len(y) < longest {
-		nu := make([]int, longest)
-		copy(nu, y)
-		ny = nu
-	}
-	return
-}
-
 func mustParse(x *string) *Version {
 	if x == nil || len(*x) < 1 {
 		return nil
