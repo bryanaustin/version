@@ -3,11 +3,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/bryanaustin/version/.svg)](https://pkg.go.dev/github.com/bryanaustin/version/)
 
 Version string utility program.
-
-## Usage
-```bash
-version [options] version
-```
+Works with any version format. `1.2.3.4`, `v11.22`, `2024.05.08`, `1.2.3-4`
 
 ## Install
 
@@ -24,6 +20,9 @@ This can also be used as a library if you have the need for such things.
 _Note: Examples put the options at the end for readability, they don't have to be in that order_
 
 ## Usage
+```bash
+version [options] version
+```
 
 ### --base
 ```bash
