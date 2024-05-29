@@ -21,8 +21,8 @@ type Config struct {
 
 // ConfigureFromArgs will automatically configure based on process arguments. On error it will print to stderr and exit.
 func ConfigureFromArgs() *Config {
-	greaterstr := flag.String("greater", "", "test to see if this version is greater (separators ignored)")
-	lesserstr := flag.String("lesser", "", "test to see if this version is lesser (separators ignored)")
+	greaterstr := flag.String("greaterthan", "", "test to see if the version is greater than this option (separators ignored)")
+	lesserstr := flag.String("lesserthan", "", "test to see if the version is lesser than this option (separators ignored)")
 	basestr := flag.String("base", "", "increment by the largest value that is smaller than this value (separators ignored)")
 	incrementstr := flag.String("increment", "", "increase the version but the amount provided (separators ignored)")
 	setstr := flag.String("set", "", "set all non-zero numbers to the value provided (separators ignored)")
