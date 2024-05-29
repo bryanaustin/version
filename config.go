@@ -19,6 +19,13 @@ type Config struct {
 	Pad       *Version
 }
 
+var (
+	IncMajor = "1"
+	IncMinor = "0.1"
+	IncPatch = "0.0.1"
+	IncPkg = "0.0.0.1"
+)
+
 // ConfigureFromArgs will automatically configure based on process arguments. On error it will print to stderr and exit.
 func ConfigureFromArgs() *Config {
 	greaterstr := flag.String("greaterthan", "", "test to see if the version is greater than this option (separators ignored)")
@@ -41,11 +48,24 @@ func ConfigureFromArgs() *Config {
 	c.Greater = mustParse(greaterstr)
 	c.Lesser = mustParse(lesserstr)
 	c.Base = mustParse(basestr)
-	c.Increment = mustParse(incrementstr)
 	c.Set = mustParse(setstr)
 	c.Minimum = mustParse(minstr)
 	c.Format = mustParse(formatstr)
 	c.Pad = mustParse(padstr)
+
+	if incrementstr != nil {
+		switch *incrementstr {
+		case "major":
+			incrementstr = &IncMajor
+		case "minor":
+			incrementstr = &IncMinor
+		case "patch":
+			incrementstr = &IncPatch
+		case "package":
+			incrementstr = &IncPkg
+		}
+	}
+	c.Increment = mustParse(incrementstr)
 
 	lessorgreat := c.Greater != nil || c.Lesser != nil
 	if lessorgreat && (c.Base != nil || c.Increment != nil || c.Set != nil ||

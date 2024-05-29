@@ -13,7 +13,7 @@ version [options] version
 
 Requires Go compiler: https://go.dev/dl/
 ```bash
-go install github.com/bryanaustin/version/cmd/version@v1.0.1
+go install github.com/bryanaustin/version/cmd/version@v1.1.0
 ```
 This will install at `~/go/bin/version` by default.
 
@@ -21,7 +21,7 @@ This will install at `~/go/bin/version` by default.
 
 This can also be used as a library if you have the need for such things.
 
-*Note: Examples put the options at the end for readability, they don't have to be in that order*
+_Note: Examples put the options at the end for readability, they don't have to be in that order_
 
 ## Usage
 
@@ -38,6 +38,11 @@ $ version 1.2.3 --increment 0.5
 1.7.0
 ```
 Increment the version argument by the amount specified in the option. All smaller numbers will be reset to zero. Separators ignored.
+Additional allowed values:
+* `major`, same as `1`
+* `minor`, same as `0.1`
+* `patch`, same as `0.0.1`
+* `package`, same as `0.0.0.1`
 
 ### --set
 ```bash
