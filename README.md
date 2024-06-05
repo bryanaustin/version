@@ -4,6 +4,7 @@
 
 Version string utility program.
 Works with any version format. `1.2.3.4`, `v11.22`, `2024.05.08`, `1.2.3-4`
+For more information about how parsing works, see [Parsing Section](#parsing)
 
 ## Install
 
@@ -17,9 +18,10 @@ This will install at `~/go/bin/version` by default.
 
 This can also be used as a library if you have the need for such things.
 
-_Note: Examples put the options at the end for readability, they don't have to be in that order_
-
 ## Usage
+
+_Note: Examples put the options at the end for readability; they don't have to be in that order_
+
 ```bash
 version [options] version
 ```
